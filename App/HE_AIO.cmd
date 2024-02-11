@@ -18,8 +18,6 @@ if not exist "F:\PHWin\Phw.ini" (
     )
 )
 
-set pass=8048031010
-
 REM Get today's date in the format YYYY-MM-DD
 for /F "tokens=1-3" %%a in ('wmic.exe Path Win32_LocalTime Get Day^,Month^,Year /Format:table ^| findstr /r "^[0-9]"') do (
     set "YYYY=%%c"
@@ -31,12 +29,11 @@ REM Add leading zeros if needed
 if %MM% LSS 10 set MM=0%MM%
 if %DD% LSS 10 set DD=0%DD%
 
-set "TODAY=%YYYY%-%MM%-%DD%"
 set "MONTH_START=%YYYY%-%MM%-01"
-
+set "TODAY=%YYYY%-%MM%-%DD%"
 set DATEF=%MONTH_START%
 set DATET=%TODAY%
-
+set pass=8048031010
 
 :login
 cls
@@ -113,10 +110,7 @@ echo.
 echo.
 echo              Exporting Report. . . .
 echo  ----------------------------------------------------
-::sqlcmd -U sa -P MMSPhW110 -S %DBSERVER% -d %CATALOG% -Q "set nocount on;SELECT [DATEF],[DATEO],[RXNO],[NREFILL],[STATUS],[PATIENTNO],[PRESNPINO],[PRESLNM],[PRESFNM],[GROUPNO],[NDC],[DRGNAME],[STRONG],[FORM],[QUANT],[DAYS],[PICKEDUP],[DELIVERY],[PICKUPDATE] FROM [PharmSQL].[dbo].[RxDetails] WHERE [STATUS] = 'B';"  -o "%USERPROFILE%\Desktop\Prescriptions-Billed.csv" -W -s,
-::sqlcmd -U sa -P MMSPhW110 -S %DBSERVER% -d %CATALOG% -Q "set nocount on;SELECT [IC_CODE],[IC_NAME],[BIN_NO],[MAG_CODE],[ADDRESS] FROM [PharmSQL].[dbo].[INSCAR]"  -o "%USERPROFILE%\Desktop\Insurances.csv" -W -s,
-::sqlcmd -U sa -P MMSPhW110 -S %DBSERVER% -d %CATALOG% -Q "set nocount on;SELECT [RXNO],[NREFILL],[ClmStatus],[PriIns],[PriInsPaid],[SecIns],[SecInsPaid], [TerIns],[TerInsPaid],[TotalInsPaid],[TotalPatCoPay],[TotalRXAmount],[TotalCost] FROM [PharmSQL].[dbo].[ClaimPaymentView] WHERE [CLMSTATUS] = 'B';"  -o "%USERPROFILE%\Desktop\Payments.csv" -W -s,
-sqlcmd -U sa -P MMSPhW110 -S %DBSERVER% -d %CATALOG% -Q "set nocount on;SELECT RXNO,REFILL_NO,FILLNO,COVERAGECD,INS_CODE,RECTYPE,DATEPAID,ICOSTPAID,DFEEPAID,PTPAYAMT,OTHPAYRECG,TOTAMTPAID,INSNETPAID,COBBillSeq FROM [PharmSQL].[dbo].[RXPay];"  -o "%USERPROFILE%\Desktop\RXPayRecReport.csv" -W -s,
+sqlcmd -U sa -P MMSPhW110 -S %DBSERVER% -d %CATALOG% -Q "set nocount on;SELECT RXNO,REFILL_NO,FILLNO,COVERAGECD,INS_CODE,RECTYPE,DATEPAID,ICOSTPAID,DFEEPAID,PTPAYAMT,OTHPAYRECG,TOTAMTPAID,INSNETPAID,COBBillSeq FROM [PharmSQL].[dbo].[RXPay];"  -o "%USERPROFILE%\Desktop\HankerReport-%DATEF%-to-%DATET%.csv" -W -s,
 cls
 echo.
 echo  ------------%ESC%[33mHanker Enterprises Extractor%ESC%[0m------------
