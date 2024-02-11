@@ -110,7 +110,7 @@ echo.
 echo.
 echo              Exporting Report. . . .
 echo  ----------------------------------------------------
-sqlcmd -U sa -P MMSPhW110 -S %DBSERVER% -d %CATALOG% -Q "set nocount on;SELECT RXNO,REFILL_NO,FILLNO,COVERAGECD,INS_CODE,RECTYPE,DATEPAID,ICOSTPAID,DFEEPAID,PTPAYAMT,OTHPAYRECG,TOTAMTPAID,INSNETPAID,COBBillSeq FROM [PharmSQL].[dbo].[RXPay];"  -o "%USERPROFILE%\Desktop\HankerReport-%DATEF%-to-%DATET%.csv" -W -s,
+sqlcmd -U sa -P MMSPhW110 -S %DBSERVER% -d %CATALOG% -Q "set nocount on;Select	rx.datef as 'DATE FILLED',rx.rxno as 'RX',rx.nrefill as 'REFILL',rx.ndc AS 'NDC',CONCAT(TRIM(drug.DRGNAME),' ',TRIM(drug.STRONG),' ',TRIM(drug.FORM)) as 'DRUG NAME',drug.QNTPACK as 'PKG SIZE',rx.quant as 'QTY',rx.QUANT/drug.QNTPACK as 'PKG FILLED',insPri.BIN_NO as 'PRI BIN',insPri.MAG_CODE as 'PRI PCN',claim.PriInsPaid as 'PRI PAID',insSec.BIN_NO as 'SEC BIN',insSec.MAG_CODE as 'SEC PCN',claim.secinspaid as 'SEC PAID',[STATUS] AS 'STATUS' from ((((PharmSQL.dbo.RxDetails as rx left join Pharmsql.dbo.ClaimPaymentView as claim on CONCAT_WS('.', claim.rxno , claim.nrefill) = CONCAT_WS('.', rx.rxno , rx.nrefill)) left join Pharmsql.dbo.Drug as drug on drug.drgndc = rx.ndc) left join PharmSQL.dbo.INSCAR as insPri on insPri.IC_CODE = claim.PriIns) left join PharmSQL.dbo.INSCAR as insSec on insSec.IC_CODE = claim.SecIns) WHERE [STATUS] = 'B' AND rx.DATEF >= '%DATEF%' AND RX.DATEF <= '%DATET%';"  -o "%USERPROFILE%\Desktop\HankerReport-%DATEF%-to-%DATET%.csv" -W -s,
 cls
 echo.
 echo  ------------%ESC%[33mHanker Enterprises Extractor%ESC%[0m------------
