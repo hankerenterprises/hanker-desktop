@@ -5,7 +5,7 @@ msiexec /i "%CD%\driver.msi"
 ECHO Done.
 
 ECHO .
-ECHO Installing App. . . .
+ECHO Installing CLI Utilities. . . .
 msiexec /i "%CD%\app.msi"
 ECHO Done.
 
@@ -17,7 +17,7 @@ ECHO .
 
 PAUSE
 
-ECHO Uninstalling App. . . .
+ECHO Uninstalling CLI Utilities. . . .
 msiexec /i "%CD%\app.msi"
 ECHO Done.
 ECHO .
